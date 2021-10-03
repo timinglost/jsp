@@ -38,3 +38,7 @@ main {
     flex-direction: column;
     margin-left: 30px;
 }
+.basket {
+    display: none;
+    background-color: crimson;
+}
