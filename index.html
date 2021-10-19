@@ -1,25 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>eShop</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <header>
-    <button class="cart-button" type="button">Корзина</button>
-    <div class="basket">lll</div>
-  </header>
-  <main>
-    <div class="goods-list"></div>
-  </main>
-  <p class="text_main">some txt :
-    'Hi, I'am Gray' - somebody say.
-    'Hallow. I'am... I'am Jack' - sombady say.
-  </p>
-  <script src="script.js"></script>
-  <script src="script_rv.js"></script>
+  <div id="app">
+    <header>
+      <input type="text" class="goods-search" v-model="searchLine" />
+      <button class="search-button" type="button" @click="FilterGoods">Искать</button>
+      <button class="cart-button" type="button" @click="showBasket">Корзина</button>
+      <div class="basket" v-if="isVisibleCart">
+        <div class="basket_top">
+          <div>Название товара</div>
+          <div>Количество</div>
+          <div>Цена за шт.</div>
+          <div>Итого</div>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="goods-list">
+        <div class="good-card" v-for="good of filteredGoods" v-bind:key="good.id_product">
+          <h2>{{ good.product_name }}</h2>
+          <p>${{ good.price }}</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="main.js"></script>
 </body>
 
 </html>
