@@ -1,13 +1,24 @@
-const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/'
+const API_URL = 'http://localhost:3000/'
 
 Vue.component('good-card', {
-  template: `<div class="good-card">
+  template: `<div class="good-card" @click="onClick">
     <h2>{{ title }}</h2>
     <p>$ {{ price }}</p>
   </div>`,
   props: {
     title: String,
     price: Number
+  },
+  methods: {
+    onClick() {
+      fetch(API_URL + "addToCart", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/JSON'
+        },
+        body: JSON.stringify({ product_name: this.title, price: this.price })
+      })
+    }
   }
 })
 
@@ -45,14 +56,16 @@ Vue.component('basket', {
   template: `<div class="basket-all">
               <button class="cart-button" type="button" v-on:click="showBasket">Корзина</button>
               <div class="basket" v-if="isVisibleCart">
-                <div class="basket_top">
-                  <div>Название товара</div>
-                  <div>Количество</div>
-                  <div>Цена за шт.</div>
-                  <div>Итого</div>
-                </div>
+                <basket-card 
+                v-for="good of list" 
+                v-bind:key="good.id_product" 
+                v-bind:title="good.product_name"
+                v-bind:price="good.price"></basket-card>
               </div>
             </div>`,
+  props: {
+    list: Array
+  },
   data() {
     return {
       isVisibleCart: false,
@@ -63,6 +76,16 @@ Vue.component('basket', {
       this.isVisibleCart = !this.isVisibleCart
     }
   }
+});
+Vue.component('basket-card', {
+  template: `<div class="basket-card">
+    <h2>{{ title }}</h2>
+    <p>$ {{ price }}</p>
+  </div>`,
+  props: {
+    title: String,
+    price: Number
+  },
 })
 
 new Vue({
@@ -71,14 +94,22 @@ new Vue({
     goods: [],
     filteredGoods: [],
     searchLine: '',
+    goods_b: []
   },
   methods: {
     loadGoods() {
-      fetch(`${API_URL}catalogData.json`)
+      fetch(`${API_URL}catalogData`)
         .then((request) => request.json())
         .then((data) => {
           this.goods = data;
           this.filteredGoods = data;
+        })
+    },
+    loadBasket() {
+      fetch(`${API_URL}catalogBasket`)
+        .then((request) => request.json())
+        .then((data) => {
+          this.goods_b = data;
         })
     },
     onSearch(searhString) {

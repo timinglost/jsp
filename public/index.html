@@ -12,7 +12,7 @@
   <div id="app">
     <header>
       <search v-on:search="onSearch"></search>
-      <basket v-on:showing="showBasket"></basket>
+      <basket v-on:showing="showBasket" v-bind:list="goods_b"></basket>
 
     </header>
     <main>
